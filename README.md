@@ -1,1 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Yuraboo Photo Booth</title>
+<style>
+body {
+  text-align: center;
+  background: #fce4ec;
+  font-family: Arial;
+}
 
+video {
+  width: 300px;
+  border-radius: 15px;
+  margin-top: 20px;
+  transform: scaleX(-1);
+}
+
+button {
+  margin: 10px;
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: none;
+  background: #ff4da6;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#countdown {
+  font-size: 40px;
+  font-weight: bold;
+  color: #ff4da6;
+  margin-top: 10px;
+}
+
+img {
+  margin-top: 20px;
+  width: 300px;
+}
+</style>
+</head>
+
+<body>
+
+<h2 style="color:#ff4da6;">YURABOO 💗</h2>
+
+<video id="video" autoplay playsinline></video>
+<div id="countdown"></div>
+<br>
+
+<button oneclick="switchCamera()">카메라 전환</button>
+<button onclick="startBooth()">📸 4컷 시작</button>
+<button onclick="downloadPhoto()">💾 다운로드</button>
+
+<canvas id="canvas" style="display:none;"></canvas>
+<img id="result">
+
+<script>
+const video = document.getElementById("video");
+const canvas = document.getElementById("canvas");
+const context = canvas.getContext("2d");
+const countdownEl = document.getElementById("countdown");
+let shots = [];
+
+navigator.mediaDevices.getUserMedia({ video: true })
+.then(stream => {
+  video.srcObject = stream;
+});
+
+function startBooth() {
+  shots = [];
+  takeShot(0);
+}
+
+function takeShot(count) {
+  if (count >= 4) {
+    mergePhotos();
+    return;
+  }
+
+  let timeLeft = 3;
+  countdownEl.innerText = timeLeft;
+
+  let timer = setInterval(() => {
+    timeLeft--;
+    countdownEl.innerText = timeLeft;
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      capture(count);
+    }
+  }, 1000);
+}
+
+function capture(count) {
+  const tempCanvas = document.createElement("canvas");
+  const tempCtx = tempCanvas.getContext("2d");
+
+  tempCanvas.width = video.videoWidth;
+  tempCanvas.height = video.videoHeight;
+
+  tempCtx.save();
+  tempCtx.scale(-1, 1);
+  tempCtx.translate(-tempCanvas.width, 0);
+  tempCtx.drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
+  tempCtx.restore();
+
+  shots.push(tempCanvas);
+
+  countdownEl.innerText = "";
+  setTimeout(() => takeShot(count + 1), 500);
+}
+
+function mergePhotos() {
+  const width = shots[0].width;
+  const height = shots[0].height;
+
+  canvas.width = width;
+  canvas.height = height * 4 + 80;
+
+  context.fillStyle = "white";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+
+  for (let i = 0; i < 4; i++) {
+    context.drawImage(shots[i], 0, i * height);
+  }
+
+  const today = new Date();
+  const dateText = today.getFullYear() + "." +
+                   String(today.getMonth()+1).padStart(2,'0') + "." +
+                   String(today.getDate()).padStart(2,'0');
+
+  context.fillStyle = "#ff4da6";
+  context.font = "20px Arial";
+  context.textAlign = "center";
+  context.fillText("YURABOO", width/2, height*4 + 30);
+  context.fillText(dateText, width/2, height*4 + 60);
+
+  document.getElementById("result").src = canvas.toDataURL("image/png");
+}
+
+function downloadPhoto() {
+  const link = document.createElement("a");
+  link.download = "yuraboo_4cut.png";
+  link.href = canvas.toDataURL();
+  link.click();
+}
+</script>
+</body>
+</html>
