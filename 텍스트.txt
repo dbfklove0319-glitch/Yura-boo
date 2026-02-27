@@ -51,6 +51,7 @@ img {
 <div id="countdown"></div>
 <br>
 
+<button oneclick="switchCamera()">카메라 전환</button>
 <button onclick="startBooth()">📸 4컷 시작</button>
 <button onclick="downloadPhoto()">💾 다운로드</button>
 
