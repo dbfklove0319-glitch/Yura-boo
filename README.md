@@ -7,8 +7,7 @@
 body {
   text-align: center;
   background: #fce4ec;
-  font-family: Arial;
-}
+  font-family: Arial;}
 
 video {
   width: 300px;
