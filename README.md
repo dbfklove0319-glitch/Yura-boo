@@ -47,12 +47,15 @@ img {
 <button onclick="takePhoto()">📸 사진찍기</button>
 
 <div>
-  <button onclick="setFilter('none')">기본</button>
-  <button onclick="setFilter('grayscale(100%) contrast(120%)')">흑백감성</button>
-  <button onclick="setFilter('sepia(60%) contrast(110%) brightness(105%)')">따뜻감성</button>
-  <button onclick="setFilter('contrast(130%) brightness(90%)')">시네마</button>
-  <button onclick="setFilter('brightness(115%) saturate(120%)')">맑은날</button>
-  <button onclick="setFilter('contrast(110%) saturate(140%)')">인스타</button>
+  <button onclick="setFilter('none')">기본 카메라</button>
+
+  <button onclick="setFilter('contrast(110%) saturate(105%) brightness(102%)')">
+    iPhone SE
+  </button>
+
+  <button onclick="setFilter('contrast(95%) saturate(85%) brightness(98%) sepia(10%)')">
+    iPhone 6
+  </button>
 </div>
 
 <canvas id="canvas" style="display:none;"></canvas>
