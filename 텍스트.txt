@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Yuraboo Photo Booth</title>
-
 <style>
 body {
   text-align: center;
